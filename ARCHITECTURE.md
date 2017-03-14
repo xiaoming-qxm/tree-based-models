@@ -7,27 +7,27 @@
 
 
 ## class
-1. <base>:
+1. <base>
    FeatureSelectionCriterion()
-　　　<derived>:
-   Gini()
-   InformationGain()
-   InformationGainRatio()
-2. <base>
-   Model()
-   <derived>:
-   CART()
-   ID#()
-   C45()
+　　<derived>  
+   Gini()  
+   InformationGain()  
+   InformationGainRatio()  
+2. <base>  
+   Model()  
+   <derived>  
+   CART()  
+   ID3()  
+   C45()  
 
 3. <base>
-   Loss()
+   Loss()  
    <derived>
-   SquareLoss()
+   SquareLoss()  
 
 4. <base>
-   DataProcessor()
+   DataProcessor()  
    <derived>
-   MissedValue()
-   PCA()
-   ZeroMean()
+   MissedValue()  
+   PCA()  
+   ZeroMean()  
