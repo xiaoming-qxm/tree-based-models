@@ -23,3 +23,5 @@
    MissedValue()  
    PCA()  
    ZeroMean()  
+   OneHotEncoding()  
+5. Log()
