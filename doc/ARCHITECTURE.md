@@ -16,7 +16,7 @@
    ID3()  
    C45()  
 
-3. Loss()
+3. Loss()  
    SquareLoss()  
 
 4. DataProcessor()  
