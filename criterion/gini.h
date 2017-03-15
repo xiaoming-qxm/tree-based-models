@@ -6,10 +6,11 @@
 
 #include "classification_criterion.h"
 
-using namespace tree_based_model {
+namespace tree_based_model {
 
-class Gini : ClassificationCriterion {
-  ClassificationCriterion();
+class Gini : public ClassificationCriterion {
+  Gini();
+  ~Gini();
 
 };
 

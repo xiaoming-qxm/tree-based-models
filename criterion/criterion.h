@@ -5,23 +5,17 @@
 #ifndef CRITERION_H_
 #define CRITERION_H_
 
-using namespace tree_based_model {
+namespace tree_based_model {
 
 class Criterion {
 public:
-  Criterion();
+  Criterion() = default;
   // The impurity of the node
-  virtual double NodeImpurity();
-  // The impurity of the children
-  virtual void ChildrenImpurity(double& impurity_left, double& impurity_right);
-  // Node value
-  virtual void NodeValue();
-  // Inprovement in impurity after a split
-  virtual double InpurityImprovement();
+  double get_impurity() const { return impurity_value; }
 
-  ~Criterion();
+  virtual ~Criterion() = default;
 
-private:
+protected:
   double impurity_value;
 
 };

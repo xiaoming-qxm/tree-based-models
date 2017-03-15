@@ -7,11 +7,12 @@
 
 #include "criterion.h"
 
-using namespace tree_based_model {
+namespace tree_based_model {
 
-class ClassificationCriterion : Criterion() {
+class ClassificationCriterion : public Criterion {
 public:
-  ClassificationCriterion();
+  ClassificationCriterion() = default;
+  virtual ~ClassificationCriterion() = default;
 
 };
 

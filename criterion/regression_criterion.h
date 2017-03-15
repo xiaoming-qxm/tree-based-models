@@ -7,11 +7,12 @@
 
 #include "criterion.h"
 
-using namespace tree_based_model {
+namespace tree_based_model {
 
-class RegressionCriterion : Criterion() {
+class RegressionCriterion : public Criterion() {
 public:
-  RegressionCriterion();
+  RegressionCriterion() = default;
+  virtual ~RegressionCriterion() = default;
 
 };
 

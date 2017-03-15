@@ -7,10 +7,10 @@
 
 #include "regression_criterion.h"
 
-using namespace tree_based_model {
+namespace tree_based_model {
 
 // Mean squared error impurity criterion
-class MSE : RegressionCriterion {
+class MSE : public RegressionCriterion {
 public:
   MSE();
 

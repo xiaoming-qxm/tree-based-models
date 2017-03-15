@@ -7,12 +7,12 @@
 
 #include "regression_criterion.h"
 
-using namespace tree_based_model {
+namespace tree_based_model {
 
 // Mean absolute error impurity criterion
 // MAE = (1 / n)*(\sum_i |y_i - f_i|), where y_i
 // is the true value and f_i is the predicted value
-class MAE : RegressionCriterion {
+class MAE : public RegressionCriterion {
 public:
   MAE();
 
