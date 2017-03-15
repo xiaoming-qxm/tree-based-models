@@ -7,9 +7,11 @@
 #include <vector>
 
 using namespace std;
+namespace tbm = tree_based_model;
 
-int main(void) {
-  tree_based_model::Entropy ent;
+int main(void)
+{
+  tbm::Entropy ent;
   // test sample
   int num_classes = 2;
   // Example in Method of Statistical Learining, Li Hang
@@ -28,6 +30,7 @@ int main(void) {
                          2,1,0,1,
                          2,1,0,2,
                          2,0,0,0};
+
   const vector<int> labels{0,0,1,1,0,0,0,1,1,1,1,1,1,1,0};
 
   vector<int> feat_idx{0,1,2,3};
