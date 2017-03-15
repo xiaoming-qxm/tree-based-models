@@ -14,12 +14,12 @@ namespace tree_based_model {
 class Entropy : public ClassificationCriterion {
 public:
   Entropy() = default;
-  // Caculate best information gain
+  // Caculate best information gain only on discrete features
   int BestInfoGain(const std::vector<int> data_idx, const std::vector<int> feat_idx,
                            const std::vector<int> data, const std::vector<int> labels,
                            const int num_classes);
 
-  // Caculate best information gain ratio
+  // Caculate best information gain ratio only on discrete features
   int BestInfoGainRatio(const std::vector<int> data_idx, const std::vector<int> feat_idx,
                            const std::vector<int> data, const std::vector<int> labels,
                            const int num_classes);
