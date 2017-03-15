@@ -2,9 +2,9 @@
 // Use of this source code is governed by a MIT license that can be
 // found in the LICENSE file, See the AUTHORS file for names of contributors.
 
-#include <iostream>
 #include "../criterion/entropy.h"
 #include <vector>
+#include <iostream>
 
 using namespace std;
 namespace tbm = tree_based_model;
