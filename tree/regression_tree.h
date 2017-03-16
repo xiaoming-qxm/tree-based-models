@@ -5,6 +5,8 @@
 #ifndef REGRESSION_TREE_H_
 #define REGRESSION_TREE_H_
 
+#include "tree.h"
+
 namespace tree_based_model {
 
 class RegressionTree : public Tree {

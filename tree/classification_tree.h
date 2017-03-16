@@ -5,6 +5,8 @@
 #ifndef CLASSIFICATION_TREE_H_
 #define CLASSIFICATION_TREE_H_
 
+#include "tree.h"
+
 namespace tree_based_model {
 
 class ClassificationTree : public Tree {

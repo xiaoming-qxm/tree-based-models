@@ -10,9 +10,9 @@
 
 namespace tree_based_model {
 
-int Entropy::BestInfoGain(const std::vector<int> data_idx, const std::vector<int> feat_idx,
-                           const std::vector<int> data, const std::vector<int> labels,
-                           const int num_classes, const int num_feature) {
+int Entropy::FeatWithBestIG(const std::vector<int>& data_idx, std::vector<int>& feat_idx,
+                            const std::vector<int>& data, const std::vector<int>& labels,
+                            const int num_classes, const int num_feature) {
   std::unordered_map<int, int> class_map;
   // temp is a placeholder for vector<vector<int>> type
   std::vector<int> temp;
@@ -38,10 +38,11 @@ int Entropy::BestInfoGain(const std::vector<int> data_idx, const std::vector<int
   }
   // so far so good
 
+  int best_feature = 0;
   int best_feat_idx = 0;
   int num_row = data_idx.size();
   int num_col = feat_idx.size();
-  double best_info_gain = 0.;
+  double best_info_gain = -1000.;
 
   for(int i = 0; i < num_col; ++i) {
     std::unordered_map<int, int> num_data_grp;
@@ -79,18 +80,22 @@ int Entropy::BestInfoGain(const std::vector<int> data_idx, const std::vector<int
     // std::cout << "info ratio " << info_gain << std::endl;
 
     if(info_gain > best_info_gain) {
-      best_feat_idx = feat_idx[i];
+      best_feature = feat_idx[i];
+      best_feat_idx = i;
       best_info_gain = info_gain;
     }
   }
+
+  // Remove best feature from feature set
+  feat_idx.erase(feat_idx.begin() + best_feat_idx);
   impurity_value = best_info_gain;
 
-  return best_feat_idx;
+  return best_feature;
 }
 
-int Entropy::BestInfoGainRatio(const std::vector<int> data_idx, const std::vector<int> feat_idx,
-                               const std::vector<int> data, const std::vector<int> labels,
-                               const int num_classes, const int num_feature) {
+int Entropy::FeatWithBestIGR(const std::vector<int>& data_idx, std::vector<int>& feat_idx,
+                              const std::vector<int>& data, const std::vector<int>& labels,
+                              const int num_classes, const int num_feature) {
   std::unordered_map<int, int> class_map;
   // temp is a placeholder for vector<vector<int>> type
   std::vector<int> temp;
@@ -119,10 +124,11 @@ int Entropy::BestInfoGainRatio(const std::vector<int> data_idx, const std::vecto
   }
   // so far so good
 
+  int best_feature = 0;
   int best_feat_idx = 0;
   int num_row = data_idx.size();
   int num_col = feat_idx.size();
-  double best_info_gain_ratio = 0.;
+  double best_info_gain_ratio = -1000.;
   double mean_info_gain = 0.;
 
   for(int i = 0; i < num_col; ++i) {
@@ -182,14 +188,17 @@ int Entropy::BestInfoGainRatio(const std::vector<int> data_idx, const std::vecto
     if(info_gain_arr[i] > mean_info_gain) {
       if((info_gain_arr[i] / feat_ent_arr[i]) > best_info_gain_ratio) {
         best_info_gain_ratio = info_gain_arr[i] / feat_ent_arr[i];
-        best_feat_idx = feat_idx[i];
+        best_feature = feat_idx[i];
+        best_feat_idx = i;
       }
     }
   }
 
+  // Remove best feature from feature set
+  feat_idx.erase(feat_idx.begin() + best_feat_idx);
   impurity_value = best_info_gain_ratio;
 
-  return best_feat_idx;
+  return best_feature;
 }
 
 }
