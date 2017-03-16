@@ -15,19 +15,41 @@ void ID3::Fit(const std::vector<int>& data, const std::vector<int>& labels) {
   BuildTree(data, labels);
 }
 
+bool ID3::IsSameClass(const std::vector<int>& labels, const std::vector<int>& data_idx) {
+  int u = labels[data_idx[0]];
+  for(unsigned i = 0; i < data_idx.size(); ++i)
+    if(u != labels[data_idx[0]])
+      return false;
+  return true;
+}
+
+int ID3::FindMaxClass(const std::vector<int>& labels, const std::vector<int>& data_idx) {
+  std::vector<int> vec(num_classes, 0);
+  for(unsigned i = 0; i < data_idx.size(); ++i)
+    vec[data_idx[i]] += 1;
+  int max_class = 0;
+  int max_num = 0;
+  for(int i = 0; i < num_classes; ++i) {
+    if(vec[i] > max_num) {
+      max_num = vec[i];
+      max_class = i;
+    }
+  }
+  return max_class;
+}
+
 void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels) {
   if(data.size() % num_feature != 0 || data.size() == 0)
     throw std::runtime_error("Error: Invalid feature number or data size.");
-  if(data.size() != labels.size())
+  if(data.size() / num_feature != labels.size())
     throw std::runtime_error("Error: data and labels size must be same.");
 
   int best_feat;
   int global_step = 0;
   std::vector<int> all_data_idx;
+  std::vector<int> data_idx;
   std::vector<int> feat_idx;
   std::queue<std::vector<int>> data_queue;
-
-  data_queue.push(all_data_idx);
 
   // initially
   for(unsigned i = 0; i < data.size() / num_feature; ++i)
@@ -35,25 +57,34 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
   for(int i = 0; i < num_feature; ++i)
     feat_idx.push_back(i);
 
-  int start_point = 0;
   Entropy ent;
 
-  while(!data_queue.empty()) {
-    std::vector<int> &data_idx = data_queue.front();
-    Node node(data_idx, start_point);
+  while(!data_queue.empty() || global_step == 0) {
+    if(global_step == 0)
+      data_idx = all_data_idx;
+    else {
+      data_idx = data_queue.front();
+      data_queue.pop();
+    }
 
-    // all dataset belong to the same class
-    // TODO
-    if(false) {
+    Node node;
+
+    // the feature set is empty
+    if(feat_idx.empty()) {
       node.is_leaf = true;
-      node.class_id = 0;
+      node.class_id = FindMaxClass(labels, data_idx);
+      tree.push_back(node);
       continue;
     }
-    // the feature set is empty
-    if(feat_idx.size() == 0) {
+
+    // TODO
+    // if(data_idx.empty())
+
+    // all dataset belong to the same class
+    if(IsSameClass(labels, data_idx)) {
       node.is_leaf = true;
-      // TODO
-      node.class_id = 0;
+      node.class_id = FindMaxClass(labels, data_idx);
+      tree.push_back(node);
       continue;
     }
 
@@ -62,35 +93,47 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
                                     num_classes, num_feature);
     if(ent.get_impurity() < epsilon) {
       node.is_leaf = true;
-      // TODO
-      node.class_id = 0;
+      node.class_id = FindMaxClass(labels, data_idx);
+      tree.push_back(node);
       continue;
     }
 
     std::unordered_map<int, int> feat_sub_data_map;
+    std::unordered_map<int, int> child_node_map;
     // temp is a place holder
     std::vector<int> temp;
     std::vector<std::vector<int>> sub_data_set;
     int cnt = 0;
+    int data_val, label_val;
     for(unsigned i = 0; i < data_idx.size(); ++i) {
-      int val = data[i * num_classes + best_feat];
-      if(feat_sub_data_map.find(val) == feat_sub_data_map.end()) {
-        feat_sub_data_map[val] = cnt;
+      data_val = data[i * num_classes + best_feat];
+      label_val = labels[i * num_classes + best_feat];
+
+      if(feat_sub_data_map.find(data_val) == feat_sub_data_map.end()) {
+        ++global_step;
+        child_node_map[data_val] = global_step;
+        feat_sub_data_map[data_val] = cnt;
         sub_data_set.push_back(temp);
-        sub_data_set[cnt].push_back(labels[i * num_classes + best_feat]);
+        sub_data_set[cnt].push_back(label_val);
         ++cnt;
       } else {
-        sub_data_set[feat_sub_data_map[val]].push_back(labels[i * num_classes + best_feat]);
+        sub_data_set[feat_sub_data_map[data_val]].push_back(label_val);
       }
     }
 
-    // TODO
     for(unsigned i = 0; i < sub_data_set.size(); ++i) {
       data_queue.push(sub_data_set[i]);
     }
 
+    sub_data_set.clear();
+
+    node.child_node_map = child_node_map;
+    node.feature_id = best_feat;
+    node.is_leaf = false;
+    node.class_id = FindMaxClass(labels, data_idx);
+    node.impurity = ent.get_impurity();
+
     tree.push_back(node);
-    data_queue.pop();
   }
 
 }

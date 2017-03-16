@@ -14,7 +14,7 @@ namespace tree_based_model {
 
 class Node final {
 public:
-  Node(std::vector<int> child_idx, int start_point) {
+  Node() {
     is_leaf = false;
     // -1 for no feature until now
     feature_id = -1;
@@ -22,9 +22,6 @@ public:
     class_id = -1;
     // -1 for no parents until now
     parents_node_id = -1;
-
-    for(unsigned i = 0; i < child_idx.size(); ++i)
-      child_node_map[child_idx[i]] = start_point + i;
   }
 
   bool is_leaf;
@@ -35,6 +32,8 @@ public:
   double impurity;
   // Map from children index to corresponding node index
   std::unordered_map<int, int> child_node_map;
+
+  ~Node() = default;
 
 };
 
@@ -57,6 +56,10 @@ public:
   void SaveModel();
 
 private:
+  // whether is all same class or not
+  bool IsSameClass(const std::vector<int>& labels, const std::vector<int>& data_idx);
+  // find class which has largest number in the dataset
+  int FindMaxClass(const std::vector<int>& labels, const std::vector<int>& data_idx);
   // build tree
   void BuildTree(const std::vector<int>& data, const std::vector<int>& labels);
   // pruning tree

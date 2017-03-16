@@ -34,4 +34,5 @@ int main(void) {
   const vector<int> labels{0,0,1,1,0,0,0,1,1,1,1,1,1,1,0};
 
   tbm::ID3 model(num_classes, num_feature);
+  model.Fit(data, labels);
 }
