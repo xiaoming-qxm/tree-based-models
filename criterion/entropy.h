@@ -17,12 +17,12 @@ public:
   // Caculate best information gain only on discrete features
   int BestInfoGain(const std::vector<int> data_idx, const std::vector<int> feat_idx,
                            const std::vector<int> data, const std::vector<int> labels,
-                           const int num_classes);
+                           const int num_classes, const int num_feature);
 
   // Caculate best information gain ratio only on discrete features
   int BestInfoGainRatio(const std::vector<int> data_idx, const std::vector<int> feat_idx,
                            const std::vector<int> data, const std::vector<int> labels,
-                           const int num_classes);
+                           const int num_classes, const int num_feature);
 
   ~Entropy() = default;
 

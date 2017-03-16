@@ -12,7 +12,7 @@ namespace tree_based_model {
 
 int Entropy::BestInfoGain(const std::vector<int> data_idx, const std::vector<int> feat_idx,
                            const std::vector<int> data, const std::vector<int> labels,
-                           const int num_classes) {
+                           const int num_classes, const int num_feature) {
   std::unordered_map<int, int> class_map;
   // temp is a placeholder for vector<vector<int>> type
   std::vector<int> temp;
@@ -50,7 +50,7 @@ int Entropy::BestInfoGain(const std::vector<int> data_idx, const std::vector<int
 
     int counter = 0, idx = 0;
     for(int j = 0; j < num_row; ++j) {
-      idx = data_idx[j] * num_col + feat_idx[i];
+      idx = data_idx[j] * num_feature + feat_idx[i];
       if(feat_map.find(data[idx]) == feat_map.end()) {
         // std::cout << "data " << j << ""
         feat_map[data[idx]] = counter;
@@ -90,7 +90,7 @@ int Entropy::BestInfoGain(const std::vector<int> data_idx, const std::vector<int
 
 int Entropy::BestInfoGainRatio(const std::vector<int> data_idx, const std::vector<int> feat_idx,
                                const std::vector<int> data, const std::vector<int> labels,
-                               const int num_classes) {
+                               const int num_classes, const int num_feature) {
   std::unordered_map<int, int> class_map;
   // temp is a placeholder for vector<vector<int>> type
   std::vector<int> temp;
@@ -132,7 +132,7 @@ int Entropy::BestInfoGainRatio(const std::vector<int> data_idx, const std::vecto
 
     int counter = 0, idx = 0;
     for(int j = 0; j < num_row; ++j) {
-      idx = data_idx[j] * num_col + feat_idx[i];
+      idx = data_idx[j] * num_feature + feat_idx[i];
       if(feat_map.find(data[idx]) == feat_map.end()) {
         // std::cout << "data " << j << ""
         feat_map[data[idx]] = counter;
