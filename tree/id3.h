@@ -40,7 +40,7 @@ public:
 class ID3 final : public ClassificationTree {
 public:
   ID3(const int n_cls, const int n_feat) :
-      num_classes(n_cls), num_feature(n_feat) { epsilon = 0.001; }
+      num_classes(n_cls), num_feature(n_feat) { epsilon = 0.1; }
   ID3(const int n_cls, const int n_feat, const double eps) :
       num_classes(n_cls), num_feature(n_feat), epsilon(eps) { }
 

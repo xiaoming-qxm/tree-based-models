@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <queue>
 #include <unordered_map>
+#include <iostream>
 
 namespace tree_based_model {
 
@@ -18,15 +19,23 @@ void ID3::Fit(const std::vector<int>& data, const std::vector<int>& labels) {
 bool ID3::IsSameClass(const std::vector<int>& labels, const std::vector<int>& data_idx) {
   int u = labels[data_idx[0]];
   for(unsigned i = 0; i < data_idx.size(); ++i)
-    if(u != labels[data_idx[0]])
+    if(u != labels[data_idx[i]])
       return false;
   return true;
 }
 
 int ID3::FindMaxClass(const std::vector<int>& labels, const std::vector<int>& data_idx) {
   std::vector<int> vec(num_classes, 0);
+
   for(unsigned i = 0; i < data_idx.size(); ++i)
-    vec[data_idx[i]] += 1;
+    vec[labels[data_idx[i]]] += 1;
+
+  // Debug
+  std::cout << "class distribution: ";
+  for(int i = 0; i < num_classes; ++i) {
+    std::cout << vec[i] << " ";
+  }
+
   int max_class = 0;
   int max_num = 0;
   for(int i = 0; i < num_classes; ++i) {
@@ -59,6 +68,7 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
 
   Entropy ent;
 
+  int iter = 0;
   while(!data_queue.empty() || global_step == 0) {
     if(global_step == 0)
       data_idx = all_data_idx;
@@ -66,6 +76,11 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
       data_idx = data_queue.front();
       data_queue.pop();
     }
+
+    std::cout << std::endl <<  "..........     iter "
+                           << iter << "    .........."
+                           << std::endl;
+    ++iter;
 
     Node node;
 
@@ -76,9 +91,6 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
       tree.push_back(node);
       continue;
     }
-
-    // TODO
-    // if(data_idx.empty())
 
     // all dataset belong to the same class
     if(IsSameClass(labels, data_idx)) {
@@ -91,6 +103,14 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
     best_feat = ent.FeatWithBestIG(data_idx, feat_idx,
                                     data, labels,
                                     num_classes, num_feature);
+    // Debug
+    std::cout << "best feature: " << best_feat << std::endl;
+    std::cout << "Remaining feature: ";
+    for(unsigned i = 0; i < feat_idx.size(); ++i)
+      std::cout << feat_idx[i] << " ";
+    std::cout << std::endl;
+    std::cout << "Impurity: " << ent.get_impurity() << std::endl;
+
     if(ent.get_impurity() < epsilon) {
       node.is_leaf = true;
       node.class_id = FindMaxClass(labels, data_idx);
@@ -104,20 +124,19 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
     std::vector<int> temp;
     std::vector<std::vector<int>> sub_data_set;
     int cnt = 0;
-    int data_val, label_val;
+    int data_val;
     for(unsigned i = 0; i < data_idx.size(); ++i) {
-      data_val = data[i * num_classes + best_feat];
-      label_val = labels[i * num_classes + best_feat];
+      data_val = data[data_idx[i] * num_feature + best_feat];
 
       if(feat_sub_data_map.find(data_val) == feat_sub_data_map.end()) {
         ++global_step;
         child_node_map[data_val] = global_step;
         feat_sub_data_map[data_val] = cnt;
         sub_data_set.push_back(temp);
-        sub_data_set[cnt].push_back(label_val);
+        sub_data_set[cnt].push_back(data_idx[i]);
         ++cnt;
       } else {
-        sub_data_set[feat_sub_data_map[data_val]].push_back(label_val);
+        sub_data_set[feat_sub_data_map[data_val]].push_back(data_idx[i]);
       }
     }
 
@@ -126,6 +145,10 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
     }
 
     sub_data_set.clear();
+
+    for(std::unordered_map<int, int>::iterator iter = child_node_map.begin(); iter != child_node_map.end(); ++iter) {
+      std::cout << "key: " << iter->first << " value: " << iter->second << std::endl;
+    }
 
     node.child_node_map = child_node_map;
     node.feature_id = best_feat;
