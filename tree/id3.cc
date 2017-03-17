@@ -4,17 +4,64 @@
 
 #include "id3.h"
 #include "../criterion/entropy.h"
+#include "../json/json.hpp"
 #include <vector>
 #include <stdexcept>
 #include <queue>
 #include <unordered_map>
 #include <iostream>
+#include <fstream>
+#include <string>
 
 namespace tree_based_model {
 
 void ID3::Fit(const std::vector<int>& data, const std::vector<int>& labels) {
   BuildTree(data, labels);
 }
+
+void ID3::SaveModel(const std::string file_name) {
+  using json = nlohmann::json;
+  json js;
+
+  js["num_classes"] = num_classes;
+  js["num_feature"] = num_feature;
+  js["epsilon"] = epsilon;
+
+  for(unsigned i = 0; i < tree.size(); ++i) {
+    js["node"][std::to_string(i)]["is_leaf"] = tree[i].is_leaf;
+    js["node"][std::to_string(i)]["impurity"] = tree[i].impurity;
+    js["node"][std::to_string(i)]["class_id"] = tree[i].class_id;
+    js["node"][std::to_string(i)]["feature_id"] = tree[i].feature_id;
+    js["node"][std::to_string(i)]["parents_node_id"] = tree[i].parents_node_id;
+
+    std::unordered_map<int, int>::iterator iter;
+    for(iter = tree[i].child_node_map.begin(); iter != tree[i].child_node_map.end(); ++iter)
+      js["node"][std::to_string(i)]["child_node_map"][std::to_string(iter->first)] = iter->second;
+  }
+
+  // Write file
+  std::ofstream f;
+  f.open(file_name);
+  f << std::setw(4) << js << std::endl;
+  f.close();
+}
+
+void ID3::LoadModel(const std::string file_name) {
+  using json = nlohmann::json;
+  json js;
+  std::ifstream f;
+  f.open(file_name);
+  f >> js;
+
+  num_feature = js["num_feature"];
+  num_classes = js["num_classes"];
+  epsilon = js["epsilon"];
+
+  // TODO more
+
+  f.close();
+}
+
 
 bool ID3::IsSameClass(const std::vector<int>& labels, const std::vector<int>& data_idx) {
   int u = labels[data_idx[0]];
@@ -69,6 +116,7 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
   Entropy ent;
 
   int iter = 0;
+  // TODO fix bug: when epsilon larger than first impurity
   while(!data_queue.empty() || global_step == 0) {
     if(global_step == 0)
       data_idx = all_data_idx;
@@ -77,8 +125,8 @@ void ID3::BuildTree(const std::vector<int>& data, const std::vector<int>& labels
       data_queue.pop();
     }
 
-    std::cout << std::endl <<  "..........     iter "
-                           << iter << "    .........."
+    std::cout << std::endl <<  "..........   iter "
+                           << iter << "   .........."
                            << std::endl;
     ++iter;
 

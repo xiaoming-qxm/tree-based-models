@@ -8,6 +8,7 @@
 #include "classification_tree.h"
 
 #include <vector>
+#include <string>
 #include <unordered_map>
 
 namespace tree_based_model {
@@ -50,10 +51,10 @@ public:
   void Predict(const std::vector<int>& data);
   // Evaluate
   void Evaluate(const std::vector<int>& data, const std::vector<int>& labels);
-  // load model
-  void LoadModel();
-  // save model
-  void SaveModel();
+  // load model from json
+  void LoadModel(const std::string file_name);
+  // save model to json
+  void SaveModel(const std::string file_name);
 
 private:
   // whether is all same class or not
