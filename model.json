@@ -1,0 +1,102 @@
+{
+    "epsilon": 0.1,
+    "node": {
+        "0": {
+            "child_node_map": {
+                "0": 1,
+                "1": 2
+            },
+            "class_id": 1,
+            "feature_id": 2,
+            "impurity": 0.419973094021975,
+            "is_leaf": false,
+            "parents_node_id": -1
+        },
+        "1": {
+            "child_node_map": {
+                "0": 3,
+                "1": 4,
+                "2": 5
+            },
+            "class_id": 0,
+            "feature_id": 0,
+            "impurity": 0.520624760977104,
+            "is_leaf": false,
+            "parents_node_id": -1
+        },
+        "10": {
+            "class_id": 0,
+            "feature_id": -1,
+            "impurity": 0.970950594454669,
+            "is_leaf": true,
+            "parents_node_id": -1
+        },
+        "2": {
+            "class_id": 1,
+            "feature_id": -1,
+            "impurity": 0.520624760977104,
+            "is_leaf": true,
+            "parents_node_id": -1
+        },
+        "3": {
+            "child_node_map": {
+                "0": 6,
+                "1": 7
+            },
+            "class_id": 0,
+            "feature_id": 1,
+            "impurity": 0.787291427643771,
+            "is_leaf": false,
+            "parents_node_id": -1
+        },
+        "4": {
+            "class_id": 0,
+            "feature_id": -1,
+            "impurity": 0.787291427643771,
+            "is_leaf": true,
+            "parents_node_id": -1
+        },
+        "5": {
+            "child_node_map": {
+                "0": 10,
+                "1": 8,
+                "2": 9
+            },
+            "class_id": 1,
+            "feature_id": 3,
+            "impurity": 0.970950594454669,
+            "is_leaf": false,
+            "parents_node_id": -1
+        },
+        "6": {
+            "class_id": 0,
+            "feature_id": -1,
+            "impurity": 0.970950594454669,
+            "is_leaf": true,
+            "parents_node_id": -1
+        },
+        "7": {
+            "class_id": 1,
+            "feature_id": -1,
+            "impurity": 0.970950594454669,
+            "is_leaf": true,
+            "parents_node_id": -1
+        },
+        "8": {
+            "class_id": 1,
+            "feature_id": -1,
+            "impurity": 0.970950594454669,
+            "is_leaf": true,
+            "parents_node_id": -1
+        },
+        "9": {
+            "class_id": 1,
+            "feature_id": -1,
+            "impurity": 0.970950594454669,
+            "is_leaf": true,
+            "parents_node_id": -1
+        }
+    },
+    "num_classes": 2,
+    "num_feature": 4
+}
